@@ -95,12 +95,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   /// Initialize by requesting location permission first, then load data
   Future<void> _initializeWithPermission() async {
-    // Request location permission (required to get WiFi SSID)
-    final status = await Permission.locationWhenInUse.request();
+    // Request location permission (required to get WiFi SSID on iOS/Android)
+    var status = await Permission.locationWhenInUse.status;
+    debugPrint('Initial location permission status: $status');
 
-    if (status.isGranted) {
+    if (status.isDenied) {
+      // First time - request permission (this shows the system dialog)
+      status = await Permission.locationWhenInUse.request();
+      debugPrint('After request, location permission status: $status');
+    }
+
+    if (status.isGranted || status.isLimited) {
       await _loadWifiInfo();
-    } else if (status.isPermanentlyDenied) {
+    } else if (status.isPermanentlyDenied || status.isRestricted) {
       // Show dialog to open settings if permission is permanently denied
       if (mounted) {
         _showPermissionDeniedDialog();

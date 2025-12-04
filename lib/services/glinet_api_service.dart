@@ -29,7 +29,12 @@ class GlinetApiService {
 
   /// Update the router IP address
   /// This should be called when the network gateway changes
+  /// Only clears the session if the IP actually changes
   void updateRouterIp(String newIp) {
+    if (_routerIp == newIp) {
+      // Same IP, no need to clear session
+      return;
+    }
     _routerIp = newIp;
     // Clear session since we're connecting to a different router
     _sessionId = null;

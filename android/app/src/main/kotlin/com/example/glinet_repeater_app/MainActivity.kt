@@ -1,4 +1,4 @@
-package tech.broto.glinet_connect
+package tech.broto.glinetconnect
 
 import io.flutter.embedding.android.FlutterActivity
 

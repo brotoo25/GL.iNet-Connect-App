@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "tech.broto.glinet_connect"
+    namespace = "tech.broto.glinetconnect"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -19,9 +19,9 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-	    defaultConfig {
-	        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-	        applicationId = "tech.broto.glinet_connect"
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId = "tech.broto.glinetconnect"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
