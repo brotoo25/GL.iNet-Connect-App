@@ -1,4 +1,4 @@
-package com.example.glinet_repeater_app
+package tech.broto.glinet_connect
 
 import io.flutter.embedding.android.FlutterActivity
 

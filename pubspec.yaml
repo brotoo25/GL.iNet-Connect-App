@@ -1,4 +1,4 @@
-name: glinet_repeater_app
+name: glinet_connect
 description: Flutter app for configuring GL.iNet router repeater WiFi credentials
 
 environment:

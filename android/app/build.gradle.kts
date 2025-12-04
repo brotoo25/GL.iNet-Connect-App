@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.glinet_repeater_app"
+	namespace = "tech.broto.glinet_connect"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -19,9 +19,9 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.glinet_repeater_app"
+	    defaultConfig {
+	        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+	        applicationId = "tech.broto.glinet_connect"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
