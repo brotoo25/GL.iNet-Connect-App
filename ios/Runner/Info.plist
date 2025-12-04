@@ -45,6 +45,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<!-- Required for getting WiFi SSID on iOS -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs location access to identify the WiFi network you are connected to.</string>
 
 		<key>NSAppTransportSecurity</key>
 		<dict>

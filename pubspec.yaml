@@ -13,6 +13,7 @@ dependencies:
   permission_handler: ^11.0.0
   crypto: ^3.0.5
   crypt: ^4.3.0
+  network_info_plus: ^6.1.1
 
 dev_dependencies:
   flutter_test:

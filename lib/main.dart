@@ -5,6 +5,57 @@ void main() {
   runApp(const MyApp());
 }
 
+/// Custom theme extension for app-specific colors
+class AppColors extends ThemeExtension<AppColors> {
+  final Color cardBackground;
+  final Color inputBackground;
+  final Color subtitleGray;
+  final Color successGreen;
+  final Color errorRed;
+  final Color warningOrange;
+
+  const AppColors({
+    required this.cardBackground,
+    required this.inputBackground,
+    required this.subtitleGray,
+    required this.successGreen,
+    required this.errorRed,
+    required this.warningOrange,
+  });
+
+  @override
+  AppColors copyWith({
+    Color? cardBackground,
+    Color? inputBackground,
+    Color? subtitleGray,
+    Color? successGreen,
+    Color? errorRed,
+    Color? warningOrange,
+  }) {
+    return AppColors(
+      cardBackground: cardBackground ?? this.cardBackground,
+      inputBackground: inputBackground ?? this.inputBackground,
+      subtitleGray: subtitleGray ?? this.subtitleGray,
+      successGreen: successGreen ?? this.successGreen,
+      errorRed: errorRed ?? this.errorRed,
+      warningOrange: warningOrange ?? this.warningOrange,
+    );
+  }
+
+  @override
+  AppColors lerp(ThemeExtension<AppColors>? other, double t) {
+    if (other is! AppColors) return this;
+    return AppColors(
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
+      inputBackground: Color.lerp(inputBackground, other.inputBackground, t)!,
+      subtitleGray: Color.lerp(subtitleGray, other.subtitleGray, t)!,
+      successGreen: Color.lerp(successGreen, other.successGreen, t)!,
+      errorRed: Color.lerp(errorRed, other.errorRed, t)!,
+      warningOrange: Color.lerp(warningOrange, other.warningOrange, t)!,
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -14,6 +65,9 @@ class MyApp extends StatelessWidget {
   static const Color cardBackground = Color(0xFF252836);
   static const Color inputBackground = Color(0xFF2D303E);
   static const Color subtitleGray = Color(0xFF8E8E93);
+  static const Color successGreen = Color(0xFF4CAF50);
+  static const Color errorRed = Color(0xFFE53935);
+  static const Color warningOrange = Color(0xFFFF9800);
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +136,16 @@ class MyApp extends StatelessWidget {
             fontSize: 14,
           ),
         ),
+        extensions: const <ThemeExtension<dynamic>>[
+          AppColors(
+            cardBackground: cardBackground,
+            inputBackground: inputBackground,
+            subtitleGray: subtitleGray,
+            successGreen: successGreen,
+            errorRed: errorRed,
+            warningOrange: warningOrange,
+          ),
+        ],
       ),
       home: const HomeScreen(),
       debugShowCheckedModeBanner: false,

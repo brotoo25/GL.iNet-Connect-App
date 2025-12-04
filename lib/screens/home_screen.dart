@@ -3,6 +3,7 @@ import '../services/glinet_api_service.dart';
 import '../services/credential_storage_service.dart';
 import '../models/wifi_network.dart';
 import '../models/exceptions.dart';
+import 'dashboard_screen.dart';
 
 /// Main screen for GL.iNet repeater setup application
 class HomeScreen extends StatefulWidget {
@@ -388,20 +389,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Show dashboard after authentication, otherwise show login form
+    if (_isAuthenticated) {
+      return DashboardScreen(
+        onLogout: _handleLogout,
+        onSetupRepeater: _navigateToRepeaterSetup,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('GL.iNet Repeater Setup'),
-        actions: _isAuthenticated
-            ? [
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: _handleLogout,
-                  tooltip: 'Logout',
-                ),
-              ]
-            : null,
       ),
-      body: _isAuthenticated ? _buildMainInterface() : _buildLoginForm(),
+      body: _buildLoginForm(),
+    );
+  }
+
+  /// Navigate to repeater setup (WiFi scanning interface)
+  void _navigateToRepeaterSetup() {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Set Up Wi-Fi Repeater'),
+          ),
+          body: _buildMainInterface(),
+        ),
+      ),
     );
   }
 
