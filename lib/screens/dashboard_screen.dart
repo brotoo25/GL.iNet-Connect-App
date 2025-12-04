@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../main.dart';
 import '../services/wifi_info_service.dart';
+import '../widgets/about_dialog.dart';
+import '../widgets/app_drawer.dart';
 import '../widgets/phone_wifi_card.dart';
 import '../widgets/router_connection_card.dart';
 
@@ -139,24 +141,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  void _showHelp() {
+    // TODO: Implement help screen or dialog
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Help coming soon!')),
+    );
+  }
+
+  void _showRateApp() {
+    // TODO: Implement app rating (e.g., using in_app_review package)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Rate the App coming soon!')),
+    );
+  }
+
+  void _showAbout() => showAppAboutDialog(context);
+
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
 
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Icon(Icons.router, color: appColors.successGreen),
-        ),
         title: const Text('Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: widget.onLogout,
-            tooltip: 'Logout',
-          ),
-        ],
+      ),
+      drawer: AppDrawer(
+        onLogout: widget.onLogout,
+        onHelp: _showHelp,
+        onRateApp: _showRateApp,
+        onAbout: _showAbout,
       ),
       body: SafeArea(
         child: Column(
