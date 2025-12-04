@@ -6,6 +6,7 @@ import '../services/wifi_info_service.dart';
 import '../widgets/about_dialog.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/phone_wifi_card.dart';
+import '../widgets/rate_app_dialog.dart';
 import '../widgets/router_connection_card.dart';
 
 /// Dashboard screen displayed after successful login
@@ -148,12 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  void _showRateApp() {
-    // TODO: Implement app rating (e.g., using in_app_review package)
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Rate the App coming soon!')),
-    );
-  }
+  Future<void> _showRateApp() => requestAppReview(context);
 
   void _showAbout() => showAppAboutDialog(context);
 
