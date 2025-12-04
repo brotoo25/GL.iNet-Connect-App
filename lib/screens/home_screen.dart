@@ -408,61 +408,81 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Build login form UI
   /// GL.iNet routers use 'root' as the username, so only password is needed
   Widget _buildLoginForm() {
-    return Center(
+    final theme = Theme.of(context);
+
+    return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 4,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Router Login',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Enter your GL.iNet admin password',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Admin Password',
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(_passwordObscured
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () => setState(
-                          () => _passwordObscured = !_passwordObscured),
-                      tooltip:
-                          _passwordObscured ? 'Show password' : 'Hide password',
-                    ),
-                  ),
-                  obscureText: _passwordObscured,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _handleLogin(),
-                  autofocus: true,
-                ),
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: _isLoading ? null : _handleLogin,
-                  child: const Text('Login'),
-                ),
-                if (_isLoading) ...[
-                  const SizedBox(height: 16),
-                  const CircularProgressIndicator(),
-                ],
-              ],
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 80),
+            // Logo
+            Center(
+              child: Image.asset(
+                'assets/logo_white.png',
+                width: 100,
+                height: 100,
+              ),
             ),
-          ),
+            const SizedBox(height: 32),
+            // Title
+            Text(
+              'Router Login',
+              style: theme.textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            // Subtitle
+            Text(
+              "Enter your router's admin password.",
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            // Admin Password label
+            Text(
+              'Admin Password',
+              style: theme.textTheme.labelMedium,
+            ),
+            const SizedBox(height: 8),
+            // Password field
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                    color: theme.textTheme.bodyMedium?.color,
+                  ),
+                  onPressed: () =>
+                      setState(() => _passwordObscured = !_passwordObscured),
+                  tooltip:
+                      _passwordObscured ? 'Show password' : 'Hide password',
+                ),
+              ),
+              obscureText: _passwordObscured,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _handleLogin(),
+              style: const TextStyle(color: Colors.white),
+            ),
+            const SizedBox(height: 24),
+            // Login button
+            FilledButton(
+              onPressed: _isLoading ? null : _handleLogin,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text('Login'),
+            ),
+          ],
         ),
       ),
     );
