@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/app_shell.dart';
 
 void main() {
   runApp(const MyApp());
@@ -123,6 +123,20 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(28),
+            ),
+            side: const BorderSide(color: subtitleGray),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
         textTheme: const TextTheme(
           headlineMedium: TextStyle(
             color: Colors.white,
@@ -147,7 +161,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
       ),
-      home: const HomeScreen(),
+      home: const AppShell(),
       debugShowCheckedModeBanner: false,
     );
   }
