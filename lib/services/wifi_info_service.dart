@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -6,6 +8,12 @@ import 'package:permission_handler/permission_handler.dart';
 /// Service for getting device WiFi connection information
 class WifiInfoService {
   final NetworkInfo _networkInfo = NetworkInfo();
+  final Connectivity _connectivity = Connectivity();
+
+  /// Stream of connectivity changes
+  /// Emits whenever the device connects or disconnects from a network
+  Stream<List<ConnectivityResult>> get onConnectivityChanged =>
+      _connectivity.onConnectivityChanged;
 
   /// Get the current WiFi network name (SSID)
   /// Returns null if not connected or permission denied
@@ -93,4 +101,3 @@ class WifiConnectionInfo {
     required this.isConnected,
   });
 }
-

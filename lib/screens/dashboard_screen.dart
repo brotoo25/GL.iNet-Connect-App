@@ -36,17 +36,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? _connectedNetwork;
   DateTime? _lastChecked;
   Timer? _refreshTimer;
+  StreamSubscription<dynamic>? _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
     _initializeWithPermission();
+    _startConnectivityListener();
   }
 
   @override
   void dispose() {
     _refreshTimer?.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
+  }
+
+  /// Start listening for WiFi connectivity changes
+  void _startConnectivityListener() {
+    _connectivitySubscription =
+        _wifiInfoService.onConnectivityChanged.listen((result) {
+      // When connectivity changes, refresh WiFi info and connection status
+      debugPrint('Connectivity changed: $result');
+      _loadWifiInfo();
+      _checkConnection();
+    });
   }
 
   /// Initialize by requesting location permission first, then load data
