@@ -22,14 +22,16 @@ Wi-Fi repeater networks from your phone.
 ## Prerequisites
 
 - Flutter SDK matching the version constraints in pubspec.yaml
+- FVM (Flutter Version Management) installed and configured (this project uses FVM to pin the Flutter version)
 - A GL.iNet router running firmware 4.x reachable from your device
 
 ## Setup
 
 1. Clone this repository.
-2. From the project root, run `flutter pub get` to install dependencies.
-3. Connect a device or start an emulator.
-4. Run `flutter run` to launch the app.
+2. If you use FVM, run `fvm use` in the project root to select the correct Flutter version, then prefix Flutter commands with `fvm` (for example, `fvm flutter pub get`, `fvm flutter run`).
+3. From the project root, run `flutter pub get` (or `fvm flutter pub get`) to install dependencies.
+4. Connect a device or start an emulator.
+5. Run `flutter run` (or `fvm flutter run`) to launch the app.
 
 ## Project structure
 
