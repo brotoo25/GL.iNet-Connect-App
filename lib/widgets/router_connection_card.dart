@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../main.dart';
 
 /// Enum representing the different states of router internet connection
@@ -41,6 +42,7 @@ class _RouterConnectionCardState extends State<RouterConnectionCard> {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -53,11 +55,11 @@ class _RouterConnectionCardState extends State<RouterConnectionCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Router Internet Status',
+            l10n.routerInternetStatus,
             style: TextStyle(color: appColors.subtitleGray, fontSize: 12),
           ),
           const SizedBox(height: 8),
-          _buildHeader(),
+          _buildHeader(l10n),
           const SizedBox(height: 8),
           // Animated transition between states
           AnimatedSwitcher(
@@ -83,14 +85,14 @@ class _RouterConnectionCardState extends State<RouterConnectionCard> {
     );
   }
 
-  Widget _buildHeader() {
-    return const Row(
+  Widget _buildHeader(AppLocalizations l10n) {
+    return Row(
       children: [
-        Icon(Icons.language, color: Colors.white, size: 24),
-        SizedBox(width: 12),
+        const Icon(Icons.language, color: Colors.white, size: 24),
+        const SizedBox(width: 12),
         Text(
-          'Router Internet Connection',
-          style: TextStyle(
+          l10n.routerInternetConnection,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -136,11 +138,12 @@ class _CheckingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Checking connection...',
+          l10n.checkingConnection,
           style: TextStyle(color: theme.colorScheme.primary, fontSize: 14),
         ),
         const SizedBox(height: 12),

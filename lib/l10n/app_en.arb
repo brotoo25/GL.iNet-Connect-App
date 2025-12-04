@@ -1,0 +1,130 @@
+{
+  "@@locale": "en",
+  "appTitle": "GL.iNet Connect",
+  "appName": "GL.iNet Connect",
+
+  "loginTitle": "Router Login",
+  "loginSubtitle": "Enter your router's admin password.",
+  "adminPassword": "Admin Password",
+  "passwordHint": "Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "login": "Login",
+  "pleaseEnterPassword": "Please enter the admin password",
+
+  "dashboard": "Dashboard",
+  "setUpWifiRepeater": "Set Up Wi-Fi Repeater",
+  "lastCheckedJustNow": "Last checked: just now",
+  "lastCheckedSecondsAgo": "Last checked: {seconds} seconds ago",
+  "@lastCheckedSecondsAgo": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "lastCheckedMinuteAgo": "Last checked: 1 minute ago",
+  "lastCheckedMinutesAgo": "Last checked: {minutes} minutes ago",
+  "@lastCheckedMinutesAgo": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "lastCheckedHourAgo": "Last checked: 1 hour ago",
+  "lastCheckedHoursAgo": "Last checked: {hours} hours ago",
+  "@lastCheckedHoursAgo": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+
+  "phoneWifi": "Phone Wi-Fi",
+  "currentlyConnected": "Currently Connected:",
+  "notConnected": "Not Connected",
+  "phoneWifiDescription": "This is the network your phone is using.",
+
+  "routerInternetStatus": "Router Internet Status",
+  "routerInternetConnection": "Router Internet Connection",
+  "checkingConnection": "Checking connection...",
+  "connected": "Connected",
+  "disconnected": "Disconnected",
+  "routerOnlineDescription": "Your router is online and accessing the internet.",
+  "routerOfflineDescription": "The router is not connected to the internet.",
+
+  "wifiConfigurationList": "Wi-Fi Configuration List",
+  "chooseNetworkToRepeat": "Choose a network for the router to repeat.",
+  "noNetworksFound": "No networks found.\nTap refresh to scan again.",
+  "scanFailed": "Scan failed: {error}",
+  "@scanFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "connectionFailed": "Connection failed: {error}",
+  "@connectionFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "connectedTo": "Connected to {ssid}",
+  "@connectedTo": {
+    "placeholders": {
+      "ssid": {"type": "String"}
+    }
+  },
+  "enterPasswordFor": "Enter password for",
+  "cancel": "Cancel",
+  "connect": "Connect",
+
+  "scanQrCode": "Scan QR Code",
+  "scanWifiQrCode": "Scan WiFi QR Code",
+  "toggleFlash": "Toggle flash",
+  "pointCameraAtQr": "Point your camera at a WiFi QR code",
+  "invalidWifiQrCode": "Invalid WiFi QR code",
+  "qrCodeNoValidSsid": "QR code does not contain a valid SSID",
+
+  "logout": "Logout",
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "ok": "OK",
+  "retry": "Retry",
+
+  "routerUnreachable": "Router Unreachable",
+  "routerUnreachableMessage": "Router unreachable. Please connect to the GL.iNet router network.",
+  "authenticationFailed": "Authentication Failed",
+  "storedCredentialsInvalid": "Stored credentials are invalid. Please log in again.",
+  "autoLoginFailed": "Auto-login failed. Please log in manually.",
+  "loginSuccessful": "Login successful",
+  "networkError": "Network Error",
+  "loginFailed": "Login Failed",
+  "unexpectedError": "An unexpected error occurred: {error}",
+  "@unexpectedError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "sessionExpired": "Session Expired",
+  "sessionExpiredMessage": "Your session has expired. Please log in again to continue.",
+
+  "help": "Help",
+  "rateTheApp": "Rate the App",
+  "about": "About",
+
+  "howToUse": "How to Use",
+  "gotIt": "Got it!",
+  "helpStep1Title": "1. Connect to Your Router",
+  "helpStep1Description": "Make sure your phone is connected to your GL.iNet router's WiFi network.",
+  "helpStep2Title": "2. Log In",
+  "helpStep2Description": "Enter your router admin password (the same one you use for the web interface).",
+  "helpStep3Title": "3. Scan for Networks",
+  "helpStep3Description": "Tap \"Set Up Wi-Fi Repeater\" to scan for available WiFi networks to repeat.",
+  "helpStep4Title": "4. Select & Connect",
+  "helpStep4Description": "Choose a network and enter its password. Your router will extend that network's coverage.",
+  "helpStep5Title": "5. Verify Connection",
+  "helpStep5Description": "The dashboard shows your router's internet status. Green means connected!",
+
+  "aboutDescription": "Configure your GL.iNet router as a WiFi repeater with ease.",
+  "inAppReviewNotAvailable": "In-app review is not available. The app store listing will open once the app is published.",
+
+  "locationPermissionRequired": "Location Permission Required",
+  "locationPermissionMessage": "To display the WiFi network name, location permission is needed. Please enable it in app settings.",
+  "openSettings": "Open Settings"
+}
+

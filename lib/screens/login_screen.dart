@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 /// Login screen for GL.iNet router authentication
 /// GL.iNet routers use 'root' as the username, so only password is needed
@@ -34,11 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (widget.isLoading) return;
+    final l10n = AppLocalizations.of(context)!;
 
     final password = _passwordController.text;
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the admin password')),
+        SnackBar(content: Text(l10n.pleaseEnterPassword)),
       );
       return;
     }
@@ -52,10 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('GL.iNet Repeater Setup'),
+        title: Text(l10n.appTitle),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -75,21 +78,21 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32),
               // Title
               Text(
-                'Router Login',
+                l10n.loginTitle,
                 style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               // Subtitle
               Text(
-                "Enter your router's admin password.",
+                l10n.loginSubtitle,
                 style: theme.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
               // Admin Password label
               Text(
-                'Admin Password',
+                l10n.adminPassword,
                 style: theme.textTheme.labelMedium,
               ),
               const SizedBox(height: 8),
@@ -97,15 +100,19 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: l10n.passwordHint,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _passwordObscured ? Icons.visibility_off : Icons.visibility,
+                      _passwordObscured
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: theme.textTheme.bodyMedium?.color,
                     ),
                     onPressed: () =>
                         setState(() => _passwordObscured = !_passwordObscured),
-                    tooltip: _passwordObscured ? 'Show password' : 'Hide password',
+                    tooltip: _passwordObscured
+                        ? l10n.showPassword
+                        : l10n.hidePassword,
                   ),
                 ),
                 obscureText: _passwordObscured,
@@ -126,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : const Text('Login'),
+                    : Text(l10n.login),
               ),
             ],
           ),
@@ -135,4 +142,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

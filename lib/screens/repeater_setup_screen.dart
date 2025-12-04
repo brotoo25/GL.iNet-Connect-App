@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../models/wifi_network.dart';
 import '../models/exceptions.dart';
@@ -43,7 +44,10 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       widget.onSessionExpired?.call();
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      _showErrorSnackBar('Scan failed: ${e.toString()}');
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        _showErrorSnackBar(l10n.scanFailed(e.toString()));
+      }
     } finally {
       if (mounted) setState(() => _isScanning = false);
     }
@@ -74,9 +78,10 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       );
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Connected to ${network.ssid}'),
+            content: Text(l10n.connectedTo(network.ssid)),
             backgroundColor: Colors.green,
           ),
         );
@@ -86,7 +91,10 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       widget.onSessionExpired?.call();
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      _showErrorSnackBar('Connection failed: ${e.toString()}');
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        _showErrorSnackBar(l10n.connectionFailed(e.toString()));
+      }
     } finally {
       if (mounted) setState(() => _isConnecting = false);
     }
@@ -149,7 +157,8 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       if (wifiCredentials != null) {
         await _connectWithQrCredentials(wifiCredentials);
       } else {
-        _showErrorSnackBar('Invalid WiFi QR code');
+        final l10n = AppLocalizations.of(context)!;
+        _showErrorSnackBar(l10n.invalidWifiQrCode);
       }
     }
   }
@@ -157,11 +166,12 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
   /// Connect to network using QR code credentials
   Future<void> _connectWithQrCredentials(
       Map<String, String> credentials) async {
+    final l10n = AppLocalizations.of(context)!;
     final ssid = credentials['ssid'] ?? '';
     final password = credentials['password'] ?? '';
 
     if (ssid.isEmpty) {
-      _showErrorSnackBar('QR code does not contain a valid SSID');
+      _showErrorSnackBar(l10n.qrCodeNoValidSsid);
       return;
     }
 
@@ -176,7 +186,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Connected to $ssid'),
+            content: Text(l10n.connectedTo(ssid)),
             backgroundColor: Colors.green,
           ),
         );
@@ -186,7 +196,9 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
       widget.onSessionExpired?.call();
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      _showErrorSnackBar('Connection failed: ${e.toString()}');
+      if (mounted) {
+        _showErrorSnackBar(l10n.connectionFailed(e.toString()));
+      }
     } finally {
       if (mounted) setState(() => _isConnecting = false);
     }
@@ -212,6 +224,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
     final passwordController = TextEditingController();
     bool obscurePassword = true;
     final appColors = Theme.of(context).extension<AppColors>()!;
+    final l10n = AppLocalizations.of(context)!;
 
     return showDialog<String>(
       context: context,
@@ -222,8 +235,8 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Column(
             children: [
-              const Text('Enter password for',
-                  style: TextStyle(
+              Text(l10n.enterPasswordFor,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w600)),
@@ -271,7 +284,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24)),
                     ),
-                    child: const Text('Cancel'),
+                    child: Text(l10n.cancel),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -282,7 +295,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Connect'),
+                    child: Text(l10n.connect),
                   ),
                 ),
               ],
@@ -296,6 +309,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -303,12 +317,12 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Wi-Fi Configuration List'),
+        title: Text(l10n.wifiConfigurationList),
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: _isConnecting ? null : _scanQrCode,
-            tooltip: 'Scan QR Code',
+            tooltip: l10n.scanQrCode,
           ),
           IconButton(
             icon: _isScanning
@@ -328,7 +342,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Choose a network for the router to repeat.',
+              l10n.chooseNetworkToRepeat,
               style: TextStyle(color: appColors.subtitleGray, fontSize: 14),
             ),
           ),
@@ -338,7 +352,7 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
                 : _networks.isEmpty
                     ? Center(
                         child: Text(
-                          'No networks found.\nTap refresh to scan again.',
+                          l10n.noNetworksFound,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: appColors.subtitleGray),
                         ),
@@ -462,13 +476,15 @@ class _QrScannerScreenState extends State<_QrScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Scan WiFi QR Code'),
+        title: Text(l10n.scanWifiQrCode),
         actions: [
           IconButton(
             icon: ValueListenableBuilder(
@@ -482,7 +498,7 @@ class _QrScannerScreenState extends State<_QrScannerScreen> {
               },
             ),
             onPressed: () => _controller.toggleTorch(),
-            tooltip: 'Toggle flash',
+            tooltip: l10n.toggleFlash,
           ),
         ],
       ),
@@ -507,14 +523,14 @@ class _QrScannerScreenState extends State<_QrScannerScreen> {
             ),
           ),
           // Instructions at the bottom
-          const Positioned(
+          Positioned(
             bottom: 80,
             left: 0,
             right: 0,
             child: Text(
-              'Point your camera at a WiFi QR code',
+              l10n.pointCameraAtQr,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,

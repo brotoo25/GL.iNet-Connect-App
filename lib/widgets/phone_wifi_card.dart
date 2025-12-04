@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../main.dart';
 
 /// Card widget showing the phone's current WiFi connection
@@ -16,6 +17,7 @@ class PhoneWifiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -28,7 +30,7 @@ class PhoneWifiCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Phone Wi-Fi',
+            l10n.phoneWifi,
             style: TextStyle(
               color: appColors.subtitleGray,
               fontSize: 12,
@@ -45,7 +47,7 @@ class PhoneWifiCard extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                isConnected ? 'Currently Connected:' : 'Not Connected',
+                isConnected ? l10n.currentlyConnected : l10n.notConnected,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -65,7 +67,7 @@ class PhoneWifiCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'This is the network your phone is using.',
+              l10n.phoneWifiDescription,
               style: TextStyle(
                 color: appColors.subtitleGray,
                 fontSize: 14,

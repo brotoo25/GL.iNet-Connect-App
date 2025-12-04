@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/glinet_api_service.dart';
 import '../services/credential_storage_service.dart';
 import '../models/exceptions.dart';
@@ -40,6 +41,11 @@ class _AppShellState extends State<AppShell> {
 
   /// Check for stored credentials and attempt auto-login
   Future<void> _checkStoredCredentials() async {
+    // Wait for the first frame to ensure context is available
+    await Future<void>.delayed(Duration.zero);
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       final hasCredentials = await _storageService.hasCredentials();
       if (hasCredentials) {
@@ -52,14 +58,14 @@ class _AppShellState extends State<AppShell> {
       // Silently fail - don't show error, just don't auto-login
     } on RouterUnreachableException {
       _showSnackBar(
-        'Router unreachable. Please connect to the GL.iNet router network.',
+        l10n.routerUnreachableMessage,
         backgroundColor: Colors.orange,
       );
     } on AuthenticationException {
       await _storageService.deleteCredentials();
-      _showSnackBar('Stored credentials are invalid. Please log in again.');
+      _showSnackBar(l10n.storedCredentialsInvalid);
     } catch (e) {
-      _showSnackBar('Auto-login failed. Please log in manually.');
+      _showSnackBar(l10n.autoLoginFailed);
     }
   }
 
@@ -67,6 +73,7 @@ class _AppShellState extends State<AppShell> {
   Future<bool> _performLogin(String password,
       {bool saveToStorage = true}) async {
     setState(() => _isLoading = true);
+    final l10n = AppLocalizations.of(context)!;
 
     try {
       await _apiService.login(_defaultUsername, password);
@@ -74,27 +81,26 @@ class _AppShellState extends State<AppShell> {
         await _storageService.saveCredentials(_defaultUsername, password);
       }
       setState(() => _isAuthenticated = true);
-      _showSnackBar('Login successful', backgroundColor: Colors.green);
+      _showSnackBar(l10n.loginSuccessful, backgroundColor: Colors.green);
       return true;
     } on RouterUnreachableException catch (e) {
-      _showErrorDialog('Router Unreachable', e.message,
+      _showErrorDialog(l10n.routerUnreachable, e.message,
           canRetry: true,
           onRetry: () => _performLogin(password, saveToStorage: saveToStorage));
       return false;
     } on AuthenticationException catch (e) {
-      _showErrorDialog('Authentication Failed', e.message);
+      _showErrorDialog(l10n.authenticationFailed, e.message);
       return false;
     } on SessionExpiredException catch (e) {
-      _showErrorDialog('Authentication Failed', e.message);
+      _showErrorDialog(l10n.authenticationFailed, e.message);
       return false;
     } on NetworkException catch (e) {
-      _showErrorDialog('Network Error', e.message,
+      _showErrorDialog(l10n.networkError, e.message,
           canRetry: true,
           onRetry: () => _performLogin(password, saveToStorage: saveToStorage));
       return false;
     } catch (e) {
-      _showErrorDialog(
-          'Login Failed', 'An unexpected error occurred: ${e.toString()}');
+      _showErrorDialog(l10n.loginFailed, l10n.unexpectedError(e.toString()));
       return false;
     } finally {
       setState(() => _isLoading = false);
@@ -103,11 +109,12 @@ class _AppShellState extends State<AppShell> {
 
   /// Handle logout with confirmation
   Future<void> _handleLogout() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(l10n.logout),
+        content: Text(l10n.logoutConfirmation),
         actionsAlignment: MainAxisAlignment.center,
         actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         actions: [
@@ -115,7 +122,7 @@ class _AppShellState extends State<AppShell> {
             width: double.infinity,
             child: FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Logout'),
+              child: Text(l10n.logout),
             ),
           ),
           const SizedBox(height: 12),
@@ -123,7 +130,7 @@ class _AppShellState extends State<AppShell> {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancel),
             ),
           ),
         ],
@@ -142,6 +149,7 @@ class _AppShellState extends State<AppShell> {
 
   /// Handle session expiration
   Future<void> _handleSessionExpired() async {
+    final l10n = AppLocalizations.of(context)!;
     _apiService.logout();
     await _storageService.deleteCredentials();
     setState(() {
@@ -149,8 +157,8 @@ class _AppShellState extends State<AppShell> {
       _isLoading = false;
     });
     _showErrorDialog(
-      'Session Expired',
-      'Your session has expired. Please log in again to continue.',
+      l10n.sessionExpired,
+      l10n.sessionExpiredMessage,
     );
   }
 
@@ -184,6 +192,7 @@ class _AppShellState extends State<AppShell> {
     VoidCallback? onRetry,
   }) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -213,7 +222,7 @@ class _AppShellState extends State<AppShell> {
                   Navigator.pop(context);
                   onRetry();
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ),
           if (canRetry && onRetry != null) const SizedBox(height: 12),
@@ -221,7 +230,7 @@ class _AppShellState extends State<AppShell> {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: Text(l10n.ok),
             ),
           ),
         ],

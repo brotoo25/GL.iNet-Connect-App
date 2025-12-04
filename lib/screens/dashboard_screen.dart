@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../l10n/app_localizations.dart';
 import '../main.dart';
 import '../services/glinet_api_service.dart';
 import '../services/wifi_info_service.dart';
@@ -103,25 +104,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   /// Show a dialog when permission is permanently denied
   void _showPermissionDeniedDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Location Permission Required'),
-        content: const Text(
-          'To display the WiFi network name, location permission is needed. '
-          'Please enable it in app settings.',
-        ),
+        title: Text(l10n.locationPermissionRequired),
+        content: Text(l10n.locationPermissionMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               openAppSettings();
             },
-            child: const Text('Open Settings'),
+            child: Text(l10n.openSettings),
           ),
         ],
       ),
@@ -180,19 +179,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  String _getLastCheckedText() {
+  String _getLastCheckedText(AppLocalizations l10n) {
     if (_lastChecked == null) return '';
     final diff = DateTime.now().difference(_lastChecked!);
     if (diff.inSeconds < 5) {
-      return 'Last checked: just now';
+      return l10n.lastCheckedJustNow;
     } else if (diff.inSeconds < 60) {
-      return 'Last checked: ${diff.inSeconds} seconds ago';
+      return l10n.lastCheckedSecondsAgo(diff.inSeconds);
     } else if (diff.inMinutes < 60) {
       final mins = diff.inMinutes;
-      return 'Last checked: $mins ${mins == 1 ? 'minute' : 'minutes'} ago';
+      return mins == 1
+          ? l10n.lastCheckedMinuteAgo
+          : l10n.lastCheckedMinutesAgo(mins);
     } else {
       final hours = diff.inHours;
-      return 'Last checked: $hours ${hours == 1 ? 'hour' : 'hours'} ago';
+      return hours == 1
+          ? l10n.lastCheckedHourAgo
+          : l10n.lastCheckedHoursAgo(hours);
     }
   }
 
@@ -205,10 +208,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: Text(l10n.dashboard),
       ),
       drawer: AppDrawer(
         onLogout: widget.onLogout,
@@ -246,18 +250,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   FilledButton(
                     onPressed: widget.onSetupRepeater,
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Set Up Wi-Fi Repeater'),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward, size: 20),
+                        Text(l10n.setUpWifiRepeater),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward, size: 20),
                       ],
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    _getLastCheckedText(),
+                    _getLastCheckedText(l10n),
                     style: TextStyle(
                       color: appColors.subtitleGray,
                       fontSize: 12,
