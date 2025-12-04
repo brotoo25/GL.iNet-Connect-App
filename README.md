@@ -67,6 +67,12 @@ Contributions are welcome.
 - Keep UI text localized via AppLocalizations.
 - Run `flutter analyze` and any relevant tests before submitting a PR.
 
+## Support
+
+If you find this project useful and want to support my work, you can buy me a coffee:
+
+<a href="https://www.buymeacoffee.com/broto" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## License
 
 This project is licensed under the GNU General Public License version 3 (GPLv3) or later.
