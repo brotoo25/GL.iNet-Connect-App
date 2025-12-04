@@ -124,4 +124,3 @@ class _HelpSection extends StatelessWidget {
     );
   }
 }
-

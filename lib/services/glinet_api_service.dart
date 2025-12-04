@@ -316,48 +316,6 @@ class GlinetApiService {
     }
   }
 
-  /// Get WiFi scan results (legacy support)
-  Future<List<WifiNetwork>> getScanResults() async {
-    try {
-      final response = await _makeRpcCall('repeater', 'scan_results', {});
-
-      final result = response.result;
-
-      // Support various result shapes: {list: [...]}, {res: [...]}, or a raw list
-      List<dynamic>? networkList;
-      if (result is Map<String, dynamic>) {
-        if (result['list'] is List) {
-          networkList = result['list'] as List<dynamic>;
-        } else if (result['res'] is List) {
-          networkList = result['res'] as List<dynamic>;
-        }
-      } else if (result is List) {
-        networkList = result;
-      }
-
-      if (networkList == null || networkList.isEmpty) {
-        return [];
-      }
-
-      final networks = <WifiNetwork>[];
-      for (final item in networkList) {
-        if (item is Map<String, dynamic>) {
-          networks.add(WifiNetwork.fromJson(item));
-        }
-      }
-
-      return networks;
-    } catch (e) {
-      // Map RouterUnreachableException to ScanException for scan context
-      if (e is RouterUnreachableException) {
-        throw ScanException('WiFi scan timed out. Please try again.');
-      }
-      // Rethrow if already a custom exception
-      if (e is ApiException) rethrow;
-      throw ScanException('Failed to retrieve scan results: $e');
-    }
-  }
-
   /// Connect to a WiFi network as repeater
   ///
   /// Uses the official GL.iNet API parameter names:

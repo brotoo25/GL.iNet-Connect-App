@@ -146,11 +146,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   /// Load the current WiFi network name from the device
   Future<void> _loadWifiInfo() async {
-    final wifiInfo = await _wifiInfoService.getWifiConnectionInfo();
+    final ssid = (await _wifiInfoService.getWifiConnectionInfo()).ssid;
     if (mounted) {
-      setState(() {
-        _connectedNetwork = wifiInfo.ssid;
-      });
+      setState(() => _connectedNetwork = ssid);
     }
   }
 

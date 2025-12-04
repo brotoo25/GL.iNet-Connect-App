@@ -17,4 +17,3 @@ void showAppAboutDialog(BuildContext context) {
     ],
   );
 }
-

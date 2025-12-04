@@ -118,13 +118,9 @@ class CredentialStorageService {
   }
 
   /// Clears stored credentials (used for logout)
-  ///
-  /// Throws [Exception] if deletion fails
   Future<void> deleteCredentials() async {
     try {
-      // Delete username
       await _storage.delete(key: _keyUsername);
-      // Delete password
       await _storage.delete(key: _keyPassword);
     } on PlatformException catch (e) {
       debugPrint('Failed to delete credentials: ${e.message}');
@@ -132,28 +128,6 @@ class CredentialStorageService {
     } catch (e) {
       debugPrint('Unexpected error deleting credentials: $e');
       throw Exception('Failed to delete credentials: $e');
-    }
-  }
-
-  /// Updates only the password while keeping the username unchanged
-  ///
-  /// Throws [ArgumentError] if password is empty
-  /// Throws [Exception] if storage operation fails
-  Future<void> updatePassword(String newPassword) async {
-    // Validate input
-    if (newPassword.isEmpty) {
-      throw ArgumentError('Password cannot be empty');
-    }
-
-    try {
-      // Update password only
-      await _storage.write(key: _keyPassword, value: newPassword);
-    } on PlatformException catch (e) {
-      debugPrint('Failed to update password: ${e.message}');
-      throw Exception('Failed to update password: ${e.message}');
-    } catch (e) {
-      debugPrint('Unexpected error updating password: $e');
-      throw Exception('Failed to update password: $e');
     }
   }
 }

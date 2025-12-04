@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 /// Requests an in-app review or shows a fallback message
-/// 
+///
 /// Returns true if the review dialog was shown, false otherwise
 Future<bool> requestAppReview(BuildContext context) async {
   final inAppReview = InAppReview.instance;
@@ -33,4 +33,3 @@ Future<bool> requestAppReview(BuildContext context) async {
     return false;
   }
 }
-

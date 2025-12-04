@@ -138,4 +138,3 @@ class NetworkException extends ApiException {
           apiError,
         );
 }
-

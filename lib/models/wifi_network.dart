@@ -70,18 +70,6 @@ class WifiNetwork {
     return 'none';
   }
 
-  /// Convert to JSON for serialization
-  Map<String, dynamic> toJson() {
-    return {
-      'ssid': ssid,
-      'bssid': bssid,
-      'signal': signal,
-      'encryption': encryption,
-      if (band != null) 'band': band,
-      if (channel != null) 'channel': channel,
-    };
-  }
-
   /// Returns a human-readable signal strength description
   String get signalStrength {
     if (signal >= -50) {

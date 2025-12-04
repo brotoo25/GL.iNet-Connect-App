@@ -39,36 +39,11 @@ class ApiResponse<T> {
     );
   }
 
-  /// Convert to JSON for serialization
-  Map<String, dynamic> toJson() {
-    return {
-      'jsonrpc': jsonrpc,
-      'id': id,
-      if (result != null) 'result': result,
-      if (error != null) 'error': error?.toJson(),
-    };
-  }
-
   /// Returns true if the response is successful (no error)
-  bool get isSuccess {
-    return error == null;
-  }
+  bool get isSuccess => error == null;
 
   /// Returns true if the response contains an error
-  bool get isError {
-    return error != null;
-  }
-
-  /// Returns result if successful, otherwise throws an exception with the error message
-  T getResultOrThrow() {
-    if (error != null) {
-      throw Exception('API Error: ${error!.message} (code: ${error!.code})');
-    }
-    if (result == null) {
-      throw Exception('API Error: No result returned');
-    }
-    return result as T;
-  }
+  bool get isError => error != null;
 
   @override
   String toString() {
