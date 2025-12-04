@@ -1,0 +1,30 @@
+# Build directories
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Platform-specific
+ios/.symlinks/
+android/.gradle/
+android/local.properties
+
+# Generated files
+*.g.dart
+*.freezed.dart
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.env
+*.pem
+*.key

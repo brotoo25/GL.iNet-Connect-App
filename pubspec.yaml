@@ -1,0 +1,23 @@
+name: glinet_repeater_app
+description: Flutter app for configuring GL.iNet router repeater WiFi credentials
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  flutter_secure_storage: ^9.0.0
+  permission_handler: ^11.0.0
+  crypto: ^3.0.5
+  crypt: ^4.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
