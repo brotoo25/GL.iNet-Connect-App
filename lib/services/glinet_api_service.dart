@@ -12,14 +12,28 @@ import 'crypto_helper.dart';
 
 /// Service class implementing JSON-RPC 2.0 client for GL.iNet router communication
 class GlinetApiService {
-  /// Router IP address
-  static const String routerIp = '192.168.8.1';
-
-  /// JSON-RPC endpoint URL
-  static const String rpcEndpoint = 'http://192.168.8.1/rpc';
+  /// Default router IP address (GL.iNet default)
+  static const String defaultRouterIp = '192.168.8.1';
 
   /// Request timeout duration
   static const Duration requestTimeout = Duration(seconds: 30);
+
+  /// Current router IP address
+  String _routerIp;
+
+  /// JSON-RPC endpoint URL (computed from router IP)
+  String get rpcEndpoint => 'http://$_routerIp/rpc';
+
+  /// Get current router IP
+  String get routerIp => _routerIp;
+
+  /// Update the router IP address
+  /// This should be called when the network gateway changes
+  void updateRouterIp(String newIp) {
+    _routerIp = newIp;
+    // Clear session since we're connecting to a different router
+    _sessionId = null;
+  }
 
   /// HTTP client for making requests
   final http.Client _httpClient;
@@ -30,9 +44,10 @@ class GlinetApiService {
   /// Current session ID (set after successful login)
   String? _sessionId;
 
-  /// Constructor
-  GlinetApiService()
-      : _httpClient = RetryClient(
+  /// Constructor with optional router IP
+  GlinetApiService({String? routerIp})
+      : _routerIp = routerIp ?? defaultRouterIp,
+        _httpClient = RetryClient(
           http.Client(),
           retries: 3,
           when: (response) {

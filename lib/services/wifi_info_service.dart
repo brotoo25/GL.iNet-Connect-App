@@ -66,6 +66,19 @@ class WifiInfoService {
     }
   }
 
+  /// Get the gateway IP address (router IP)
+  /// Returns null if not connected or unavailable
+  Future<String?> getWifiGatewayIP() async {
+    try {
+      final gatewayIP = await _networkInfo.getWifiGatewayIP();
+      debugPrint('Gateway IP: $gatewayIP');
+      return gatewayIP;
+    } catch (e) {
+      debugPrint('Error getting WiFi gateway IP: $e');
+      return null;
+    }
+  }
+
   /// Check if the device is connected to WiFi
   Future<bool> isConnectedToWifi() async {
     final wifiName = await getWifiName();
@@ -77,11 +90,13 @@ class WifiInfoService {
     final name = await getWifiName();
     final bssid = await getWifiBSSID();
     final ip = await getWifiIP();
+    final gatewayIP = await getWifiGatewayIP();
 
     return WifiConnectionInfo(
       ssid: name,
       bssid: bssid,
       ipAddress: ip,
+      gatewayIP: gatewayIP,
       isConnected: name != null && name.isNotEmpty,
     );
   }
@@ -92,12 +107,14 @@ class WifiConnectionInfo {
   final String? ssid;
   final String? bssid;
   final String? ipAddress;
+  final String? gatewayIP;
   final bool isConnected;
 
   const WifiConnectionInfo({
     this.ssid,
     this.bssid,
     this.ipAddress,
+    this.gatewayIP,
     required this.isConnected,
   });
 }

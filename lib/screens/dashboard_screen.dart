@@ -68,12 +68,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
   /// Start listening for WiFi connectivity changes
   void _startConnectivityListener() {
     _connectivitySubscription =
-        _wifiInfoService.onConnectivityChanged.listen((result) {
+        _wifiInfoService.onConnectivityChanged.listen((result) async {
       // When connectivity changes, refresh WiFi info and connection status
       debugPrint('Connectivity changed: $result');
+
+      // Update router IP based on new network gateway
+      await _updateRouterIp();
+
       _loadWifiInfo();
       _checkConnection();
     });
+  }
+
+  /// Update the router IP based on the current network gateway
+  Future<void> _updateRouterIp() async {
+    try {
+      final gatewayIP = await _wifiInfoService.getWifiGatewayIP();
+      if (gatewayIP != null && gatewayIP.isNotEmpty) {
+        debugPrint('Updating router IP to gateway: $gatewayIP');
+        widget.apiService.updateRouterIp(gatewayIP);
+      }
+    } catch (e) {
+      debugPrint('Error updating router IP: $e');
+    }
   }
 
   /// Initialize by requesting location permission first, then load data

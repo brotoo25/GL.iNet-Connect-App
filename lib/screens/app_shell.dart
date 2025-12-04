@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../services/glinet_api_service.dart';
 import '../services/credential_storage_service.dart';
+import '../services/wifi_info_service.dart';
 import '../models/exceptions.dart';
 import 'login_screen.dart';
 import 'dashboard_screen.dart';
@@ -18,6 +19,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   late final GlinetApiService _apiService;
   late final CredentialStorageService _storageService;
+  final WifiInfoService _wifiInfoService = WifiInfoService();
 
   // GL.iNet routers use 'root' as the default/only username
   static const String _defaultUsername = 'root';
@@ -30,6 +32,25 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _apiService = GlinetApiService();
     _storageService = CredentialStorageService();
+    _initializeRouterIp();
+  }
+
+  /// Initialize router IP from network gateway and then check stored credentials
+  Future<void> _initializeRouterIp() async {
+    try {
+      final gatewayIP = await _wifiInfoService.getWifiGatewayIP();
+      if (gatewayIP != null && gatewayIP.isNotEmpty) {
+        debugPrint('Detected gateway IP: $gatewayIP');
+        _apiService.updateRouterIp(gatewayIP);
+      } else {
+        debugPrint(
+            'Could not detect gateway IP, using default: ${GlinetApiService.defaultRouterIp}');
+      }
+    } catch (e) {
+      debugPrint('Error detecting gateway IP: $e');
+    }
+
+    // After setting router IP, check for stored credentials
     _checkStoredCredentials();
   }
 
