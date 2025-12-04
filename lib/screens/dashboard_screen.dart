@@ -36,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? _connectedNetwork;
   DateTime? _lastChecked;
   Timer? _refreshTimer;
+  Timer? _lastCheckedTimer;
   StreamSubscription<dynamic>? _connectivitySubscription;
 
   @override
@@ -43,13 +44,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _initializeWithPermission();
     _startConnectivityListener();
+    _startLastCheckedTimer();
   }
 
   @override
   void dispose() {
     _refreshTimer?.cancel();
+    _lastCheckedTimer?.cancel();
     _connectivitySubscription?.cancel();
     super.dispose();
+  }
+
+  /// Start a timer that updates the "Last checked" text every second
+  void _startLastCheckedTimer() {
+    _lastCheckedTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_lastChecked != null && mounted) {
+        setState(() {});
+      }
+    });
   }
 
   /// Start listening for WiFi connectivity changes
@@ -171,12 +183,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String _getLastCheckedText() {
     if (_lastChecked == null) return '';
     final diff = DateTime.now().difference(_lastChecked!);
-    if (diff.inSeconds < 60) {
+    if (diff.inSeconds < 5) {
+      return 'Last checked: just now';
+    } else if (diff.inSeconds < 60) {
       return 'Last checked: ${diff.inSeconds} seconds ago';
     } else if (diff.inMinutes < 60) {
-      return 'Last checked: ${diff.inMinutes} minutes ago';
+      final mins = diff.inMinutes;
+      return 'Last checked: $mins ${mins == 1 ? 'minute' : 'minutes'} ago';
     } else {
-      return 'Last checked: ${diff.inHours} hours ago';
+      final hours = diff.inHours;
+      return 'Last checked: $hours ${hours == 1 ? 'hour' : 'hours'} ago';
     }
   }
 
