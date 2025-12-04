@@ -394,6 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return DashboardScreen(
         onLogout: _handleLogout,
         onSetupRepeater: _navigateToRepeaterSetup,
+        apiService: _apiService,
       );
     }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../main.dart';
+import '../services/glinet_api_service.dart';
 import '../services/wifi_info_service.dart';
 import '../widgets/about_dialog.dart';
 import '../widgets/app_drawer.dart';
@@ -14,11 +15,13 @@ import '../widgets/router_connection_card.dart';
 class DashboardScreen extends StatefulWidget {
   final VoidCallback onLogout;
   final VoidCallback onSetupRepeater;
+  final GlinetApiService apiService;
 
   const DashboardScreen({
     super.key,
     required this.onLogout,
     required this.onSetupRepeater,
+    required this.apiService,
   });
 
   @override
@@ -114,20 +117,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _connectionState = RouterConnectionState.checking;
     });
 
-    // TODO: Replace with actual router internet connectivity check
-    // For now, simulate checking connection
-    await Future<void>.delayed(const Duration(seconds: 2));
+    try {
+      // Use the API service to check actual internet connectivity
+      final status = await widget.apiService.checkInternetStatus();
+      final isConnected = status['connected'] as bool;
+      final pingResultsData =
+          status['pingResults'] as List<Map<String, dynamic>>;
 
-    // Simulate connected state with ping results
-    if (mounted) {
-      setState(() {
-        _connectionState = RouterConnectionState.connected;
-        _pingResults = const [
-          PingResult(provider: 'Google', ips: ['8.8.8.8', '8.8.4.4']),
-          PingResult(provider: 'Cloudflare', ips: ['1.1.1.1', '1.0.0.2']),
-        ];
-        _lastChecked = DateTime.now();
-      });
+      if (mounted) {
+        setState(() {
+          _connectionState = isConnected
+              ? RouterConnectionState.connected
+              : RouterConnectionState.disconnected;
+
+          // Convert ping results to PingResult objects (include all, even failed)
+          _pingResults = pingResultsData
+              .map((r) => PingResult(
+                    provider: r['provider'] as String,
+                    ips: List<String>.from(r['ips'] as List),
+                    success: r['success'] as bool,
+                  ))
+              .toList();
+
+          _lastChecked = DateTime.now();
+        });
+      }
+    } catch (e) {
+      // On error, show disconnected state
+      if (mounted) {
+        setState(() {
+          _connectionState = RouterConnectionState.disconnected;
+          _pingResults = null;
+          _lastChecked = DateTime.now();
+        });
+      }
     }
   }
 

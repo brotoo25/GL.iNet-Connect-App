@@ -12,8 +12,13 @@ enum RouterConnectionState {
 class PingResult {
   final String provider;
   final List<String> ips;
+  final bool success;
 
-  const PingResult({required this.provider, required this.ips});
+  const PingResult({
+    required this.provider,
+    required this.ips,
+    this.success = true,
+  });
 }
 
 /// Card widget showing the router's internet connection status
@@ -245,6 +250,10 @@ class _PingResultColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use green for successful pings, red for failed ones
+    final indicatorColor =
+        result.success ? appColors.successGreen : appColors.errorRed;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,7 +270,7 @@ class _PingResultColumn extends StatelessWidget {
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: appColors.successGreen,
+                      color: indicatorColor,
                       shape: BoxShape.circle,
                     ),
                   ),

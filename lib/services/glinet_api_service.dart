@@ -419,6 +419,92 @@ class GlinetApiService {
     }
   }
 
+  /// Check the router's internet connectivity status
+  ///
+  /// Returns a map with connectivity information:
+  /// - 'connected': bool - whether internet is available
+  /// - 'pingResults': List<Map> - results of ping tests to various servers
+  Future<Map<String, dynamic>> checkInternetStatus() async {
+    final pingResults = <Map<String, dynamic>>[];
+
+    // List of servers to check connectivity
+    // Using DNS lookup to verify reachability (works for DNS servers)
+    // and HTTP endpoints as backup
+    final servers = [
+      {
+        'provider': 'Google',
+        'ips': ['8.8.8.8', '8.8.4.4'],
+        'testDomain': 'google.com',
+      },
+      {
+        'provider': 'Cloudflare',
+        'ips': ['1.1.1.1', '1.0.0.1'],
+        'testDomain': 'cloudflare.com',
+      },
+    ];
+
+    bool anySuccessful = false;
+
+    for (final server in servers) {
+      final provider = server['provider'] as String;
+      final ips = server['ips'] as List<String>;
+      final testDomain = server['testDomain'] as String;
+      bool serverSuccess = false;
+
+      // Method 1: Try DNS lookup to verify internet connectivity
+      // This is more reliable than HTTP for checking if DNS servers are reachable
+      try {
+        final addresses = await InternetAddress.lookup(testDomain)
+            .timeout(const Duration(seconds: 3));
+        if (addresses.isNotEmpty) {
+          serverSuccess = true;
+          anySuccessful = true;
+        }
+      } on SocketException {
+        // DNS lookup failed
+      } on TimeoutException {
+        // DNS lookup timed out
+      } catch (e) {
+        // Other error
+      }
+
+      // Method 2: If DNS lookup failed, try socket connection to the DNS server
+      if (!serverSuccess) {
+        for (final ip in ips) {
+          try {
+            // Try to open a socket connection to the DNS port (53)
+            final socket = await Socket.connect(
+              ip,
+              53,
+              timeout: const Duration(seconds: 2),
+            );
+            await socket.close();
+            serverSuccess = true;
+            anySuccessful = true;
+            break; // One successful connection is enough
+          } on SocketException {
+            // Socket connection failed
+          } on TimeoutException {
+            // Socket connection timed out
+          } catch (e) {
+            // Other error
+          }
+        }
+      }
+
+      pingResults.add({
+        'provider': provider,
+        'ips': ips,
+        'success': serverSuccess,
+      });
+    }
+
+    return {
+      'connected': anySuccessful,
+      'pingResults': pingResults,
+    };
+  }
+
   /// Check if currently authenticated
   bool get isAuthenticated {
     return _sessionId != null;
