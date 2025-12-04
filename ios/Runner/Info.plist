@@ -48,6 +48,9 @@
 	<!-- Required for getting WiFi SSID on iOS -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs location access to identify the WiFi network you are connected to.</string>
+	<!-- Required for QR code scanning -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan WiFi QR codes.</string>
 
 		<key>NSAppTransportSecurity</key>
 		<dict>

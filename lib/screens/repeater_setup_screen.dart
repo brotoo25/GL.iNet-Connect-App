@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../main.dart';
 import '../models/wifi_network.dart';
 import '../models/exceptions.dart';
@@ -96,6 +97,99 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
+  }
+
+  /// Parse WiFi credentials from QR code data
+  /// WiFi QR codes follow the format: `WIFI:T:auth;S:ssid;P:password;;`
+  Map<String, String>? _parseWifiQrCode(String data) {
+    if (!data.startsWith('WIFI:')) return null;
+
+    final Map<String, String> result = {};
+    // Remove WIFI: prefix and trailing ;;
+    String content = data.substring(5);
+    if (content.endsWith(';;')) {
+      content = content.substring(0, content.length - 2);
+    }
+
+    // Parse key:value pairs separated by ;
+    final parts = content.split(';');
+    for (final part in parts) {
+      if (part.isEmpty) continue;
+      final colonIndex = part.indexOf(':');
+      if (colonIndex > 0) {
+        final key = part.substring(0, colonIndex);
+        final value = part.substring(colonIndex + 1);
+        result[key] = value;
+      }
+    }
+
+    // S = SSID, P = Password, T = Authentication type
+    if (result.containsKey('S')) {
+      return {
+        'ssid': result['S'] ?? '',
+        'password': result['P'] ?? '',
+        'authType': result['T'] ?? 'WPA',
+      };
+    }
+    return null;
+  }
+
+  /// Open QR code scanner and connect to scanned network
+  Future<void> _scanQrCode() async {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+
+    final result = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (context) => _QrScannerScreen(appColors: appColors),
+      ),
+    );
+
+    if (result != null && mounted) {
+      final wifiCredentials = _parseWifiQrCode(result);
+      if (wifiCredentials != null) {
+        await _connectWithQrCredentials(wifiCredentials);
+      } else {
+        _showErrorSnackBar('Invalid WiFi QR code');
+      }
+    }
+  }
+
+  /// Connect to network using QR code credentials
+  Future<void> _connectWithQrCredentials(
+      Map<String, String> credentials) async {
+    final ssid = credentials['ssid'] ?? '';
+    final password = credentials['password'] ?? '';
+
+    if (ssid.isEmpty) {
+      _showErrorSnackBar('QR code does not contain a valid SSID');
+      return;
+    }
+
+    setState(() => _isConnecting = true);
+
+    try {
+      await widget.apiService.connectRepeater(
+        ssid: ssid,
+        password: password,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Connected to $ssid'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pop(true);
+      }
+    } on SessionExpiredException {
+      widget.onSessionExpired?.call();
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      _showErrorSnackBar('Connection failed: ${e.toString()}');
+    } finally {
+      if (mounted) setState(() => _isConnecting = false);
+    }
   }
 
   IconData _getSignalIcon(int signal) {
@@ -212,6 +306,11 @@ class _RepeaterSetupScreenState extends State<RepeaterSetupScreen> {
         title: const Text('Wi-Fi Configuration List'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.qr_code_scanner),
+            onPressed: _isConnecting ? null : _scanQrCode,
+            tooltip: 'Scan QR Code',
+          ),
+          IconButton(
             icon: _isScanning
                 ? const SizedBox(
                     width: 20,
@@ -326,6 +425,109 @@ class _NetworkListItem extends StatelessWidget {
           ],
         ),
         onTap: onTap,
+      ),
+    );
+  }
+}
+
+/// QR Code Scanner Screen
+class _QrScannerScreen extends StatefulWidget {
+  final AppColors appColors;
+
+  const _QrScannerScreen({required this.appColors});
+
+  @override
+  State<_QrScannerScreen> createState() => _QrScannerScreenState();
+}
+
+class _QrScannerScreenState extends State<_QrScannerScreen> {
+  final MobileScannerController _controller = MobileScannerController();
+  bool _hasScanned = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onDetect(BarcodeCapture capture) {
+    if (_hasScanned) return;
+
+    final barcodes = capture.barcodes;
+    if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+      _hasScanned = true;
+      Navigator.of(context).pop(barcodes.first.rawValue);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Scan WiFi QR Code'),
+        actions: [
+          IconButton(
+            icon: ValueListenableBuilder(
+              valueListenable: _controller,
+              builder: (context, state, child) {
+                return Icon(
+                  state.torchState == TorchState.on
+                      ? Icons.flash_on
+                      : Icons.flash_off,
+                );
+              },
+            ),
+            onPressed: () => _controller.toggleTorch(),
+            tooltip: 'Toggle flash',
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: _controller,
+            onDetect: _onDetect,
+          ),
+          // Overlay with scanning guide
+          Center(
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          // Instructions at the bottom
+          const Positioned(
+            bottom: 80,
+            left: 0,
+            right: 0,
+            child: Text(
+              'Point your camera at a WiFi QR code',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                shadows: [
+                  Shadow(
+                    color: Color(0xCC000000), // Black with 80% opacity
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
