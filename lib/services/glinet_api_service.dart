@@ -40,6 +40,27 @@ class GlinetApiService {
     _sessionId = null;
   }
 
+  /// Check if the router is reachable by attempting to connect to the RPC endpoint
+  /// Returns true if the router responds, false otherwise
+  Future<bool> isRouterReachable() async {
+    try {
+      // Try a quick HTTP request to see if the router responds
+      final response = await http.Client()
+          .get(Uri.parse('http://$_routerIp/'))
+          .timeout(const Duration(seconds: 5));
+      // GL.iNet routers typically return 200 or redirect on the root path
+      return response.statusCode == 200 ||
+          response.statusCode == 301 ||
+          response.statusCode == 302;
+    } on TimeoutException {
+      return false;
+    } on SocketException {
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// HTTP client for making requests
   final http.Client _httpClient;
 

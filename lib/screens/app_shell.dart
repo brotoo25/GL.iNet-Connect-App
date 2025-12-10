@@ -26,17 +26,20 @@ class _AppShellState extends State<AppShell> {
 
   bool _isAuthenticated = false;
   bool _isLoading = false;
+  RouterConnectionState _connectionState = RouterConnectionState.checking;
 
   @override
   void initState() {
     super.initState();
     _apiService = GlinetApiService();
     _storageService = CredentialStorageService();
-    _initializeRouterIp();
+    _initializeAndCheckConnection();
   }
 
-  /// Initialize router IP from network gateway and then check stored credentials
-  Future<void> _initializeRouterIp() async {
+  /// Initialize router IP and check if router is reachable
+  Future<void> _initializeAndCheckConnection() async {
+    setState(() => _connectionState = RouterConnectionState.checking);
+
     try {
       final gatewayIP = await _wifiInfoService.getWifiGatewayIP();
       if (gatewayIP != null && gatewayIP.isNotEmpty) {
@@ -50,8 +53,19 @@ class _AppShellState extends State<AppShell> {
       debugPrint('Error detecting gateway IP: $e');
     }
 
-    // After setting router IP, check for stored credentials
-    _checkStoredCredentials();
+    // Check if router is reachable
+    final isReachable = await _apiService.isRouterReachable();
+    debugPrint('Router reachable: $isReachable');
+
+    if (!mounted) return;
+
+    if (isReachable) {
+      setState(() => _connectionState = RouterConnectionState.connected);
+      // Only try auto-login if router is reachable
+      _checkStoredCredentials();
+    } else {
+      setState(() => _connectionState = RouterConnectionState.notConnected);
+    }
   }
 
   @override
@@ -271,7 +285,9 @@ class _AppShellState extends State<AppShell> {
 
     return LoginScreen(
       onLogin: _performLogin,
+      onCheckConnection: _initializeAndCheckConnection,
       isLoading: _isLoading,
+      connectionState: _connectionState,
     );
   }
 }
