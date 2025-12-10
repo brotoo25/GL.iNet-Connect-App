@@ -277,4 +277,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get openSettings => 'Abrir Configuración';
+
+  @override
+  String get notConnectedToRouter => 'No Conectado al Router';
+
+  @override
+  String get notConnectedToRouterMessage =>
+      'Por favor, conecta tu dispositivo a la red WiFi de un router GL.iNet para usar esta aplicación.';
+
+  @override
+  String get openWifiSettings => 'Abrir Configuración WiFi';
+
+  @override
+  String get checkConnection => 'Verificar Conexión';
+
+  @override
+  String get checkingRouterConnection => 'Verificando conexión al router...';
 }

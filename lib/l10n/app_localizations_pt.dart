@@ -278,4 +278,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get openSettings => 'Abrir Configurações';
+
+  @override
+  String get notConnectedToRouter => 'Não Conectado ao Roteador';
+
+  @override
+  String get notConnectedToRouterMessage =>
+      'Por favor, conecte seu dispositivo à rede WiFi de um roteador GL.iNet para usar este aplicativo.';
+
+  @override
+  String get openWifiSettings => 'Abrir Configurações WiFi';
+
+  @override
+  String get checkConnection => 'Verificar Conexão';
+
+  @override
+  String get checkingRouterConnection =>
+      'Verificando conexão com o roteador...';
 }

@@ -90,6 +90,12 @@
 
   "locationPermissionRequired": "Permissão de Localização Necessária",
   "locationPermissionMessage": "Para exibir o nome da rede WiFi, é necessária permissão de localização. Por favor, habilite nas configurações do app.",
-  "openSettings": "Abrir Configurações"
+  "openSettings": "Abrir Configurações",
+
+  "notConnectedToRouter": "Não Conectado ao Roteador",
+  "notConnectedToRouterMessage": "Por favor, conecte seu dispositivo à rede WiFi de um roteador GL.iNet para usar este aplicativo.",
+  "openWifiSettings": "Abrir Configurações WiFi",
+  "checkConnection": "Verificar Conexão",
+  "checkingRouterConnection": "Verificando conexão com o roteador..."
 }
 

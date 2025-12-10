@@ -90,6 +90,12 @@
 
   "locationPermissionRequired": "Permiso de Ubicación Requerido",
   "locationPermissionMessage": "Para mostrar el nombre de la red WiFi, se necesita permiso de ubicación. Por favor, habilítalo en la configuración de la app.",
-  "openSettings": "Abrir Configuración"
+  "openSettings": "Abrir Configuración",
+
+  "notConnectedToRouter": "No Conectado al Router",
+  "notConnectedToRouterMessage": "Por favor, conecta tu dispositivo a la red WiFi de un router GL.iNet para usar esta aplicación.",
+  "openWifiSettings": "Abrir Configuración WiFi",
+  "checkConnection": "Verificar Conexión",
+  "checkingRouterConnection": "Verificando conexión al router..."
 }
 

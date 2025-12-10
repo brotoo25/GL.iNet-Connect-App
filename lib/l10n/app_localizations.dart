@@ -573,6 +573,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Settings'**
   String get openSettings;
+
+  /// No description provided for @notConnectedToRouter.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Connected to Router'**
+  String get notConnectedToRouter;
+
+  /// No description provided for @notConnectedToRouterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect your device to a GL.iNet router\'s WiFi network to use this app.'**
+  String get notConnectedToRouterMessage;
+
+  /// No description provided for @openWifiSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open WiFi Settings'**
+  String get openWifiSettings;
+
+  /// No description provided for @checkConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Connection'**
+  String get checkConnection;
+
+  /// No description provided for @checkingRouterConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking router connection...'**
+  String get checkingRouterConnection;
 }
 
 class _AppLocalizationsDelegate

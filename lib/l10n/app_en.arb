@@ -125,6 +125,12 @@
 
   "locationPermissionRequired": "Location Permission Required",
   "locationPermissionMessage": "To display the WiFi network name, location permission is needed. Please enable it in app settings.",
-  "openSettings": "Open Settings"
+  "openSettings": "Open Settings",
+
+  "notConnectedToRouter": "Not Connected to Router",
+  "notConnectedToRouterMessage": "Please connect your device to a GL.iNet router's WiFi network to use this app.",
+  "openWifiSettings": "Open WiFi Settings",
+  "checkConnection": "Check Connection",
+  "checkingRouterConnection": "Checking router connection..."
 }
 
